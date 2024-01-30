@@ -8,25 +8,15 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage extends AbstractArrayStorage {
-    public void save(Resume r) {
-        if (size >= STORAGE_LIMIT) {
-            System.out.println("Переполнение Storage.");
-        } else if (isExist(getIndex(r.getUuid()))) {
-            System.out.println("Резюме существует. Добавление не выполнено");
-        } else {
-            storage[size++] = r;
-        }
+
+
+    public void remove(int index) {
+        storage[index] = storage[size - 1];
     }
 
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (isExist(index)) {
-            storage[index] = storage[size - 1];
-            storage[size - 1] = null;
-            size--;
-        } else {
-            System.out.println("Резюме с uuid " + uuid + " не найдено. Удаление не произведено");
-        }
+    @Override
+    public void insert(Resume r) {
+        storage[size++] = r;
     }
 
     /**

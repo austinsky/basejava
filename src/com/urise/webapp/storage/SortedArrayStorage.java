@@ -5,8 +5,8 @@ import com.urise.webapp.model.Resume;
 import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
-    @Override
-    public void save(Resume r) {
+
+    public void insert(Resume r) {
         int index = getIndex(r.getUuid());
 
         if (index < 0) {
@@ -18,18 +18,10 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         size++;
     }
 
-    @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
 
-        if (isExist(index)) {
-            int countElementsToCopy = size - index - 1;
-            System.arraycopy(storage, index + 1, storage, index, countElementsToCopy);
-            storage[size - 1] = null;
-            size--;
-        } else {
-            System.out.println("Резюме с uuid " + uuid + " не найдено. Удаление не произведено");
-        }
+    public void remove(int index) {
+        int countElementsToCopy = size - index - 1;
+        System.arraycopy(storage, index + 1, storage, index, countElementsToCopy);
     }
 
     @Override
