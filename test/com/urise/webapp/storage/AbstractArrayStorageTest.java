@@ -68,13 +68,13 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test(expected = ExistStorageException.class)
-    public void saveExistElement() throws Exception {
+    public void saveExistElement()  {
         storage.save(RESUME_1);
         Assert.assertEquals(3, storage.size());
     }
 
     @Test(expected = StorageException.class)
-    public void saveStorageOverflow() throws Exception {
+    public void saveStorageOverflow() {
 
         // Заполняем до
         try {
@@ -114,7 +114,7 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test(expected = NotExistStorageException.class)
-    public void updateNotExist() throws Exception {
+    public void updateNotExist() {
         storage.get("dummy");
     }
 
