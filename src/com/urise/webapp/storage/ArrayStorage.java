@@ -9,14 +9,13 @@ import java.util.Arrays;
  */
 public class ArrayStorage extends AbstractArrayStorage {
 
-
-    public void remove(int index) {
+    public void fillRemovedResume(int index) {
         storage[index] = storage[size - 1];
     }
 
     @Override
-    public void insert(Resume r) {
-        storage[size++] = r;
+    public void insertResume(Resume r) {
+        storage[size] = r;
     }
 
     /**

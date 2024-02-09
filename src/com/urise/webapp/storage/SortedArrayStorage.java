@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
 
-    public void insert(Resume r) {
+    public void insertResume(Resume r) {
         int index = getIndex(r.getUuid());
 
         if (index < 0) {
@@ -15,11 +15,9 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         }
         System.arraycopy(storage, index, storage, index + 1, size - index);
         storage[index] = r;
-        size++;
     }
 
-
-    public void remove(int index) {
+    public void fillRemovedResume(int index) {
         int countElementsToCopy = size - index - 1;
         System.arraycopy(storage, index + 1, storage, index, countElementsToCopy);
     }

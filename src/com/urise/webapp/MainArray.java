@@ -31,35 +31,39 @@ public class MainArray {
             if (params.length == 2) {
                 uuid = params[1].intern();
             }
-            switch (params[0]) {
-                case "list":
-                    printAll();
-                    break;
-                case "size":
-                    System.out.println(ARRAY_STORAGE.size());
-                    break;
-                case "save":
-                    r = new Resume();
-                    r.setUuid(uuid);
-                    ARRAY_STORAGE.save(r);
-                    printAll();
-                    break;
-                case "delete":
-                    ARRAY_STORAGE.delete(uuid);
-                    printAll();
-                    break;
-                case "get":
-                    System.out.println(ARRAY_STORAGE.get(uuid));
-                    break;
-                case "clear":
-                    ARRAY_STORAGE.clear();
-                    printAll();
-                    break;
-                case "exit":
-                    return;
-                default:
-                    System.out.println("Неверная команда.");
-                    break;
+            try {
+                switch (params[0]) {
+                    case "list":
+                        printAll();
+                        break;
+                    case "size":
+                        System.out.println(ARRAY_STORAGE.size());
+                        break;
+                    case "save":
+                        r = new Resume();
+                        r.setUuid(uuid);
+                        ARRAY_STORAGE.save(r);
+                        printAll();
+                        break;
+                    case "delete":
+                        ARRAY_STORAGE.delete(uuid);
+                        printAll();
+                        break;
+                    case "get":
+                        System.out.println(ARRAY_STORAGE.get(uuid));
+                        break;
+                    case "clear":
+                        ARRAY_STORAGE.clear();
+                        printAll();
+                        break;
+                    case "exit":
+                        return;
+                    default:
+                        System.out.println("Неверная команда.");
+                        break;
+                }
+            } catch (RuntimeException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
