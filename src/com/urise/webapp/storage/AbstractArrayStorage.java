@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     protected static final int STORAGE_LIMIT = 10000;
 
@@ -21,7 +21,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    public void runClear() {
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
@@ -30,7 +30,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return Arrays.copyOf(storage, size);
     }
 
-    protected final void runSave(Resume r) {
+    protected final void doSave(Resume r, Integer key) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Переполнение Storage.", r.getUuid());
         }  else {
@@ -39,47 +39,31 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         }
     }
 
-    protected final void runDelete(Resume r) {
-        int index = getIndex(r.getUuid());
-
-        if (isExist(index)) {
-            fillRemovedResume(index);
-            storage[size - 1] = null;
-            size--;
-        } else {
-            throw new NotExistStorageException(r.getUuid());
-        }
+    protected final void doDelete(Integer key) {
+        fillRemovedResume(key);
+        storage[size - 1] = null;
+        size--;
     }
 
-    protected final void runUpdate(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (isExist(index)) {
-            storage[index] = resume;
-        } else {
-            throw new NotExistStorageException(resume.getUuid());
-        }
+    protected final void doUpdate(Resume resume, Integer key) {
+        storage[key] = resume;
     }
 
-    protected final Resume runGet(String uuid) {
-        int index = getIndex(uuid);
-        if (!isExist(index)) {
-            throw new NotExistStorageException(uuid);
-        }
-
-        return storage[index];
+    protected final Resume doGet(String uuid, Integer key) {
+        return storage[key];
     }
 
-    protected boolean isExist(int index) {
-        return index >= 0;
+    protected boolean isExist(Integer key) {
+        return ((key != null) && (key.intValue() >= 0));
     }
 
-    public Resume searchElement(String uuid) {
+    public Integer searchKey(String uuid) {
         int index = getIndex(uuid);
         if (!isExist(index)) {
             return null;
         }
 
-        return storage[index];
+        return index;
     }
 
     protected abstract int getIndex(String uuid);
@@ -87,6 +71,4 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     public abstract void fillRemovedResume(int index);
 
     public abstract void insertResume(Resume r);
-
-
 }

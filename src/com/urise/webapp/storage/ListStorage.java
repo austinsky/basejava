@@ -6,10 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
 
     protected List<Resume> storage = new ArrayList<>();
-
 
     @Override
     public Resume[] getAll() {
@@ -22,41 +21,42 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void runClear() {
+    public void clear() {
         storage.clear();
     }
 
     @Override
-    public void runUpdate(Resume r) {
-        int index = storage.indexOf(r);
-        storage.set(index, r);
+    public void doUpdate(Resume r, Integer key) {
+        storage.set(key, r);
     }
 
     @Override
-    public void runSave(Resume r) {
+    public void doSave(Resume r, Integer key) {
         storage.add(r);
     }
 
     @Override
-    public Resume runGet(String uuid) {
-        return searchElement(uuid);
+    public Resume doGet(String uuid, Integer key) {
+        return storage.get(key);
     }
 
     @Override
-    public void runDelete(Resume r) {
-        storage.remove(r);
+    public void doDelete(Integer key) {
+        storage.remove(key.intValue());
     }
 
     @Override
-    public Resume searchElement(String uuid) {
-       Resume resume;
-
+    public Integer searchKey(String uuid) {
        try {
-           resume = storage.stream().filter(x -> x.getUuid() == uuid).findFirst().get();
+           Resume resume = storage.stream().filter(x -> x.getUuid() == uuid).findFirst().get();
+           return storage.indexOf(resume);
        } catch (NoSuchElementException e) {
-           resume = null;
+           return null;
        }
+    }
 
-       return resume;
+    @Override
+    protected boolean isExist(Integer searchKey) {
+        return searchKey != null;
     }
 }

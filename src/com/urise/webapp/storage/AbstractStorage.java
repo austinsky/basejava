@@ -4,66 +4,61 @@ import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
-public abstract class AbstractStorage implements Storage {
-    @Override
-    public void clear() {
-        runClear();
-    }
+import java.io.ObjectStreamException;
+
+public abstract class AbstractStorage<T> implements Storage {
 
     @Override
     public void update(Resume r) {
-        Resume resume = searchElement(r.getUuid());
-        if (resume != null) {
-            runUpdate(r);
-        } else {
-            throw new NotExistStorageException(resume.getUuid());
-        }
+        T key = getExistingSearchKey(r.getUuid());
+        doUpdate(r, key);
     }
 
     @Override
     public void save(Resume r) {
-        if (isExist(r.getUuid())) {
-            throw new ExistStorageException(r.getUuid());
-        } else {
-            runSave(r);
-        }
+        T key = getNotExistingSearchKey(r.getUuid());
+        doSave(r, key);
     }
 
     @Override
     public Resume get(String uuid) {
-        if (isExist(uuid)) {
-            return runGet(uuid);
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+        T key = getExistingSearchKey(uuid);
+        return doGet(uuid, key);
     }
 
     @Override
     public void delete(String uuid) {
-        Resume resume = searchElement(uuid);
-        if (resume != null) {
-            runDelete(resume);
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+        T key = getExistingSearchKey(uuid);
+        doDelete(key);
     }
 
-    protected boolean isExist(String uuid) {
-        return (searchElement(uuid) != null);
+    protected T getExistingSearchKey(String uuid) {
+        T key = searchKey(uuid);
+        if (!isExist(key)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return key;
+    }
+
+    protected T getNotExistingSearchKey(String uuid) {
+        T key = searchKey(uuid);
+        if (isExist(key)) {
+            throw new ExistStorageException(uuid);
+        }
+        return key;
     }
 
     @Override
     public abstract Resume[] getAll();
 
-    protected abstract void runClear();
+    protected abstract void doUpdate(Resume r, T searchKey);
 
-    protected abstract void runUpdate(Resume r);
+    protected abstract void doSave(Resume r, T searchKey);
+    protected abstract Resume doGet(String uuid, T searchKey);
 
-    protected abstract void runSave(Resume r);
-    protected abstract Resume runGet(String uuid);
+    protected abstract void doDelete(T searchKey);
 
-    protected abstract void runDelete(Resume r);
+    protected abstract T searchKey(String uuid);
 
-    protected abstract Resume searchElement(String uuid);
-
+    protected abstract boolean isExist(T searchKey);
 }
