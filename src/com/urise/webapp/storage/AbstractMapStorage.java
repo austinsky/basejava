@@ -3,17 +3,18 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class MapStorage extends AbstractStorage<String> {
+public abstract class AbstractMapStorage extends AbstractStorage<String> {
 
     protected Map<String, Resume> storage = new HashMap<>();
 
-
     @Override
-    public Resume[] getAll() {
-        Resume[] resumes = storage.values().toArray(new Resume[storage.size()]);
-        Arrays.sort(resumes);
-        return resumes;
+    public List<Resume> getAllSorted() {
+        return storage.values().stream().filter(x -> x != null).sorted((x, y) -> {
+            int result = x.getFullName().compareTo(y.getFullName());
+            return (result == 0) ? x.getUuid().compareTo(y.getUuid()) : result;
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -32,14 +33,10 @@ public class MapStorage extends AbstractStorage<String> {
     }
 
     @Override
-    public void doSave(Resume r, String key) {
-        storage.put(r.getUuid(), r);
-    }
+    public abstract void doSave(Resume r, String key);
 
     @Override
-    public Resume doGet(String uuid, String key) {
-        return storage.get(key);
-    }
+    public abstract Resume doGet(String key);
 
     @Override
     public void doDelete(String key) {
@@ -47,12 +44,10 @@ public class MapStorage extends AbstractStorage<String> {
     }
 
     @Override
-    protected String searchKey(String uuid) {
-        return (storage.containsKey(uuid)) ? uuid : null;
-    }
+    protected abstract String searchKey(String uuid);
 
     @Override
     protected boolean isExist(String searchKey) {
-        return searchKey != null;
+        return storage.containsKey(searchKey);
     }
 }

@@ -32,8 +32,7 @@ public class AbstractArrayStorageTest extends AbstractStorageTest {
         // Заполняем до
         try {
             for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-                Resume r = new Resume();
-                r.setUuid("uuid_" + i);
+                Resume r = new Resume("uuid_" + i, "name_" + i);
                 storage.save(r);
             }
         } catch (StorageException e) {

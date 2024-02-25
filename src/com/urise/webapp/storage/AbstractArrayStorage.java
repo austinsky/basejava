@@ -5,6 +5,8 @@ import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Array based storage for Resumes
@@ -26,8 +28,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         size = 0;
     }
 
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
+    public List<Resume> getAllSorted() {
+        return Arrays.stream(storage).filter(x -> x != null).sorted((x, y) -> {
+            int result = x.getFullName().compareTo(y.getFullName());
+            return (result == 0) ? x.getUuid().compareTo(y.getUuid()) : result;
+        }).collect(Collectors.toList());
     }
 
     protected final void doSave(Resume r, Integer key) {
@@ -49,7 +54,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         storage[key] = resume;
     }
 
-    protected final Resume doGet(String uuid, Integer key) {
+    protected final Resume doGet(Integer key) {
         return storage[key];
     }
 

@@ -3,16 +3,21 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class ListStorage extends AbstractStorage<Integer> {
 
     protected List<Resume> storage = new ArrayList<>();
 
     @Override
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[storage.size()]);
+    public List<Resume> getAllSorted() {
+        return storage.stream().filter(x -> x != null).sorted( (x, y) -> {
+            int result = x.getFullName().compareTo(y.getFullName());
+            return (result == 0) ? x.getUuid().compareTo(y.getUuid()) : result;
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -36,7 +41,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    public Resume doGet(String uuid, Integer key) {
+    public Resume doGet(Integer key) {
         return storage.get(key);
     }
 
@@ -47,12 +52,12 @@ public class ListStorage extends AbstractStorage<Integer> {
 
     @Override
     public Integer searchKey(String uuid) {
-       try {
-           Resume resume = storage.stream().filter(x -> x.getUuid() == uuid).findFirst().get();
-           return storage.indexOf(resume);
-       } catch (NoSuchElementException e) {
-           return null;
-       }
+        for (int i = 0; i < storage.size(); ++i) {
+            if (storage.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return null;
     }
 
     @Override
