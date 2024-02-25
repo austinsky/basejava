@@ -1,16 +1,15 @@
 package com.urise.webapp;
 
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.AbstractArrayStorage;
-import com.urise.webapp.storage.ArrayStorage;
-import com.urise.webapp.storage.SortedArrayStorage;
+import com.urise.webapp.storage.*;
 
 /**
  * Test for your ArrayStorage implementation
  */
 public class MainTestArrayStorage {
 //    static final AbstractArrayStorage ARRAY_STORAGE = new ArrayStorage();
-    static final AbstractArrayStorage ARRAY_STORAGE = new SortedArrayStorage();
+//    static final AbstractArrayStorage ARRAY_STORAGE = new SortedArrayStorage();
+static final AbstractStorage<String> ARRAY_STORAGE = new MapFullNameStorage();
 
     public static void main(String[] args) {
         Resume r1 = new Resume("name_uuid1");
