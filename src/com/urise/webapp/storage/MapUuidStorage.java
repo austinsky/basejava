@@ -16,8 +16,4 @@ public class MapUuidStorage extends AbstractMapStorage {
         storage.put(r.getUuid(), r);
     }
 
-    @Override
-    public Resume doGet(String key) {
-        return storage.get(key);
-    }
 }

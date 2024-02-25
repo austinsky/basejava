@@ -36,7 +36,9 @@ public abstract class AbstractMapStorage extends AbstractStorage<String> {
     public abstract void doSave(Resume r, String key);
 
     @Override
-    public abstract Resume doGet(String key);
+    public Resume doGet(String key) {
+        return storage.get(key);
+    }
 
     @Override
     public void doDelete(String key) {

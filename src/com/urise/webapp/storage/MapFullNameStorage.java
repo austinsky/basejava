@@ -21,15 +21,4 @@ public class MapFullNameStorage extends AbstractMapStorage {
     public void doSave(Resume r, String key) {
         storage.put(r.getFullName(), r);
     }
-
-    @Override
-    public Resume doGet(String name) {
-        try {
-            return storage.values().stream().
-                    filter(x -> x.getFullName().equals(name)).findFirst().get();
-        }
-        catch (NoSuchElementException e) {
-            return null;
-        }
-    }
 }
