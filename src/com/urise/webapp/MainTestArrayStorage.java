@@ -9,7 +9,7 @@ import com.urise.webapp.storage.*;
 public class MainTestArrayStorage {
 //    static final AbstractArrayStorage ARRAY_STORAGE = new ArrayStorage();
 //    static final AbstractArrayStorage ARRAY_STORAGE = new SortedArrayStorage();
-static final AbstractStorage<String> ARRAY_STORAGE = new MapFullNameStorage();
+static final AbstractStorage<Resume> ARRAY_STORAGE = new MapResumeStorage();
 
     public static void main(String[] args) {
         Resume r1 = new Resume("name_uuid1");

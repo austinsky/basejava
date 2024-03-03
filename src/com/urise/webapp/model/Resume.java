@@ -2,12 +2,12 @@ package com.urise.webapp.model;
 
 import java.util.Objects;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Initial resume class
  */
 public class Resume implements Comparable<Resume> {
-    private static int numberUuid = 0;
 
     // Unique identifier
     private String uuid;
@@ -15,7 +15,7 @@ public class Resume implements Comparable<Resume> {
 
     public Resume(String fullName) {
         this.fullName = fullName;
-        this.uuid = "__uuid_" + (numberUuid++);
+        this.uuid = UUID.randomUUID().toString();
     }
 
     public Resume(String uuid, String fullName) {

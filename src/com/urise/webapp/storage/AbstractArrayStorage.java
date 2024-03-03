@@ -28,11 +28,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         size = 0;
     }
 
-    public List<Resume> getAllSorted() {
-        return Arrays.stream(storage).filter(x -> x != null).sorted((x, y) -> {
-            int result = x.getFullName().compareTo(y.getFullName());
-            return (result == 0) ? x.getUuid().compareTo(y.getUuid()) : result;
-        }).collect(Collectors.toList());
+    public List<Resume> doGetAll() {
+        return Arrays.stream(storage).toList();
     }
 
     protected final void doSave(Resume r, Integer key) {

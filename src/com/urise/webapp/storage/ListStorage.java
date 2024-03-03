@@ -13,11 +13,8 @@ public class ListStorage extends AbstractStorage<Integer> {
     protected List<Resume> storage = new ArrayList<>();
 
     @Override
-    public List<Resume> getAllSorted() {
-        return storage.stream().filter(x -> x != null).sorted( (x, y) -> {
-            int result = x.getFullName().compareTo(y.getFullName());
-            return (result == 0) ? x.getUuid().compareTo(y.getUuid()) : result;
-        }).collect(Collectors.toList());
+    public List<Resume> doGetAll() {
+        return storage.stream().toList();
     }
 
     @Override

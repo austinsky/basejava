@@ -6,6 +6,8 @@ import com.urise.webapp.model.Resume;
 
 import java.io.ObjectStreamException;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public abstract class AbstractStorage<T> implements Storage {
 
@@ -50,7 +52,14 @@ public abstract class AbstractStorage<T> implements Storage {
     }
 
     @Override
-    public abstract List<Resume> getAllSorted();
+    public List<Resume> getAllSorted() {
+        return doGetAll().stream().filter(Objects::nonNull).sorted((x, y) -> {
+            int result = x.getFullName().compareTo(y.getFullName());
+            return (result == 0) ? x.getUuid().compareTo(y.getUuid()) : result;
+        }).collect(Collectors.toList());
+    }
+
+    protected abstract List<Resume> doGetAll();
 
     protected abstract void doUpdate(Resume r, T searchKey);
 
