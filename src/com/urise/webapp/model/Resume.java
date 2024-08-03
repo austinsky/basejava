@@ -1,8 +1,6 @@
 package com.urise.webapp.model;
 
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -12,6 +10,9 @@ public class Resume implements Comparable<Resume> {
     // Unique identifier
     private String uuid;
     private String fullName;
+
+    private Map<ContactType, String> contacts = new HashMap<>();
+    private Map<SectionType, AbstractSection> sections = new HashMap<>();
 
     public Resume(String fullName) {
         this.fullName = fullName;
@@ -31,7 +32,31 @@ public class Resume implements Comparable<Resume> {
         this.uuid = uuid;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
 
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setContact(ContactType contactType, String value) {
+        contacts.put(contactType, value);
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public void setSection(SectionType sectionType, AbstractSection value) {
+        sections.put(sectionType, value);
+    }
+
+    public Map<SectionType, AbstractSection> getSections() {
+        return sections;
+    }
+//
+//
     @Override
     public String toString() {
         return "Resume{" +
@@ -44,14 +69,6 @@ public class Resume implements Comparable<Resume> {
     public int compareTo(Resume resume) {
         int result = fullName.compareTo(resume.getFullName());
         return (result == 0) ? uuid.compareTo(resume.getUuid()) : result;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     @Override

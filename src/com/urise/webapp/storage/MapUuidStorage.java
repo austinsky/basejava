@@ -35,5 +35,4 @@ public class MapUuidStorage extends AbstractMapStorage<String> {
     protected boolean isExist(String searchKey) {
         return storage.containsKey(searchKey);
     }
-
 }

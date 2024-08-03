@@ -2,25 +2,16 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.NoSuchElementException;
 
 public class MapResumeStorage extends AbstractMapStorage<Resume> {
     @Override
     protected Resume searchKey(String uuid) {
-//        try {
-//            return storage.values()
-//                    .stream()
-//                    .filter(x -> x.getUuid().equals(uuid))
-//                    .findFirst().get();
-//        } catch (NoSuchElementException e) {
-//            return null;
-//        }
         return storage.get(uuid);
     }
 
     @Override
     protected boolean isExist(Resume searchKey) {
-        return storage.containsValue(searchKey);
+        return searchKey != null;
     }
 
     @Override

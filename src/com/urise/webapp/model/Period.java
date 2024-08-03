@@ -1,0 +1,63 @@
+package com.urise.webapp.model;
+
+
+import java.time.LocalDate;
+
+public class Period {
+    String title;
+    String description;
+    LocalDate beginDate;
+    LocalDate endDate;
+
+
+    public Period(String title, String description, LocalDate beginDate, LocalDate endDate) {
+        this.title = title;
+        this.description = description;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public LocalDate getBeginDate() {
+        return beginDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public Period(int beginMonth, int beginYear, int endMonth, int endYear, String title, String description) {
+        if (beginMonth == 0) { beginMonth = 1; }
+        if (endMonth == 0) { endMonth = 1;}
+
+        LocalDate beginDate = LocalDate.of(beginYear, beginMonth, 1);
+        LocalDate endDate = LocalDate.of(endYear, endMonth, 1);
+        this.title = title;
+        this.description = description;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+    }
+
+    public int getBeginMonth() {
+        return beginDate.getMonth().getValue();
+    }
+
+    public int getBeginYear() {
+        return beginDate.getYear();
+    }
+
+    public int getEndMonth() {
+        return endDate.getMonth().getValue();
+    }
+
+    public int getEndYear() {
+        return endDate.getYear();
+    }
+}
