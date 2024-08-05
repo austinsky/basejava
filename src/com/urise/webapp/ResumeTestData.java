@@ -183,15 +183,15 @@ public class ResumeTestData {
 
 
         System.out.println("Опыт работы");
-        printCompany((CompanySection)(resume.getSections().get(SectionType.EXPERIENCE)));
+        printCompany((CompanySection)(resume.getSections().get(SectionType.EXPERIENCE)), true);
         System.out.println();
 
         System.out.println("Образование");
-        printCompany((CompanySection)(resume.getSections().get(SectionType.EDUCATION)));
+        printCompany((CompanySection)(resume.getSections().get(SectionType.EDUCATION)), false);
         System.out.println();
     }
 
-    public static void printCompany(CompanySection companySection) {
+    public static void printCompany(CompanySection companySection, boolean isPrintDescription) {
         for (Company company : companySection.get()) {
 
             System.out.println(company.getName());
@@ -210,33 +210,11 @@ public class ResumeTestData {
 
                 if (!itogDate.isEmpty()) {
                     System.out.println(itogDate + "       " + period.getTitle());
+                    if (isPrintDescription) System.out.println("       " + period.getDescription());
                 }
             }
 
             System.out.println();
         }
     }
-//
-//    public static void printExperiance(Company experiance) {
-//        String startDate;
-//        String endDate;
-//        String itogDate;
-//
-//        startDate = experiance.getPeriod().getBeginMonth() + "/" + experiance.getPeriod().getBeginYear();
-//        if (experiance.getPeriod().getEndMonth() == 0 && experiance.getPeriod().getEndYear() == 0) {
-//            endDate = "Настоящее время";
-//        }  else {
-//            endDate = experiance.getPeriod().getEndMonth() + "/" + experiance.getPeriod().getEndYear();
-//        }
-//        itogDate = startDate + " - " + endDate;
-//
-//        if (itogDate.isEmpty()) {
-//            System.out.println(experiance.getOrganization());
-//        } else {
-//            System.out.println(experiance.getOrganization());
-//            System.out.println(itogDate + "       " + experiance.getPosition());
-//            System.out.println(experiance.getDescription());
-//            System.out.println();
-//        }
-//    }
 }
