@@ -2,6 +2,7 @@ package com.urise.webapp.model;
 
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Period {
     String title;
@@ -59,5 +60,28 @@ public class Period {
 
     public int getEndYear() {
         return endDate.getYear();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Period period = (Period) o;
+        return Objects.equals(title, period.title) && Objects.equals(description, period.description) && Objects.equals(beginDate, period.beginDate) && Objects.equals(endDate, period.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, description, beginDate, endDate);
+    }
+
+    @Override
+    public String toString() {
+        return "Period{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", beginDate=" + beginDate +
+                ", endDate=" + endDate +
+                '}';
     }
 }

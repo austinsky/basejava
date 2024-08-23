@@ -3,9 +3,10 @@ package com.urise.webapp.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ListSection extends AbstractSection<List<String>, String> {
-    List<String> strings = new ArrayList<>();
+    List<String> strings;
 
     public ListSection(String... strings) {
         this.strings = Arrays.stream(strings).toList();
@@ -18,5 +19,25 @@ public class ListSection extends AbstractSection<List<String>, String> {
     // @Override
     public void add(String value) {
         strings.add(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ListSection that = (ListSection) o;
+        return Objects.equals(strings, that.strings);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(strings);
+    }
+
+    @Override
+    public String toString() {
+        return "ListSection{" +
+                "strings=" + strings +
+                '}';
     }
 }
