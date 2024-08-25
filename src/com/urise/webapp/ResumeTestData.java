@@ -15,7 +15,7 @@ public class ResumeTestData {
                                     "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок."
                             ))),
 
-                    new Company("Wrike", "-", Arrays.asList(
+                    new Company("Wrike", "https://www.wrike.com/", Arrays.asList(
                             new Period(10, 2014, 1, 2016,
                                     "Старший разработчик (backend)",
                                     "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."
@@ -27,31 +27,31 @@ public class ResumeTestData {
                                     "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"
                             ))),
 
-                    new Company("Luxoft (Deutsche Bank)", "-", Arrays.asList(
+                    new Company("Luxoft (Deutsche Bank)", "https://www.luxoft.ru/", Arrays.asList(
                             new Period(12, 2010, 4, 2012,
                                     "Ведущий программист",
                                     "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."
                             ))),
 
-                    new Company("Yota", "-", Arrays.asList(
+                    new Company("Yota", "https://www.yota.ru/", Arrays.asList(
                             new Period(6, 2008, 12, 2010,
                                     "Ведущий специалист",
                                     "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). Реализация администрирования, статистики и мониторинга фреймворка. Разработка online JMX клиента (Python/ Jython, Django, ExtJS)"
                             ))),
 
-                    new Company("Enkata", "-", Arrays.asList(
+                    new Company("Enkata", "http://enkata.com/", Arrays.asList(
                             new Period(3, 2007, 6, 2008,
                                     "Разработчик ПО",
                                     "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, Tomcat, JMS) частей кластерного J2EE приложения (OLAP, Data mining)."
                             ))),
 
-                    new Company("Siemens AG", "-", Arrays.asList(
+                    new Company("Siemens AG", "https://www.siemens.com/global/en.html", Arrays.asList(
                             new Period(1, 2005, 7, 2007,
                                     "Разработчик ПО",
                                     "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе Siemens @vantage (Java, Unix)."
                             ))),
 
-                    new Company("Alcatel", "-", Arrays.asList(
+                    new Company("Alcatel", "http://www.alcatel.ru/", Arrays.asList(
                             new Period(9, 1997, 1, 2005,
                                     "Инженер по аппаратному и программному тестированию",
                                     "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM)."
@@ -60,31 +60,32 @@ public class ResumeTestData {
 
     public static CompanySection exampleEducation = new CompanySection(
             Arrays.asList(
-                    new Company("Coursera", "-", Arrays.asList(
+                    new Company("Coursera", "https://www.coursera.org/course/progfun", Arrays.asList(
                             new Period(3, 2013, 5, 2013,
                                     "'Functional Programming Principles in Scala' by Martin Odersky",
                                     "-")
                     )),
 
-                    new Company("Luxoft", "-", Arrays.asList(
-                            new Period(3, 2011, 4, 2011,
+                    new Company("Luxoft", "https://www.luxoft-training.ru/training/catalog/course.html?ID=22366",
+                            Arrays.asList( new Period(3, 2011, 4, 2011,
                                     "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'",
                                     "-")
                     )),
 
-                    new Company("Siemens AG", "-", Arrays.asList(
+                    new Company("Siemens AG", "https://www.siemens.ru/", Arrays.asList(
                             new Period(1, 2005, 4, 2005,
                                     "3 месяца обучения мобильным IN сетям (Берлин)",
                                     "-")
                     )),
 
-                    new Company("Alcatel", "-", Arrays.asList(
+                    new Company("Alcatel", "http://www.alcatel.ru/", Arrays.asList(
                             new Period(9, 1997, 3, 1998,
                                     "6 месяцев обучения цифровым телефонным сетям (Москва)",
                                     "-")
                     )),
 
-                    new Company("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "-", Arrays.asList(
+                    new Company("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
+                            "https://itmo.ru/", Arrays.asList(
                             new Period(9, 1993, 7, 1996,
                                     "Аспирантура (программист С, С++)",
                                     "-"),
@@ -93,7 +94,7 @@ public class ResumeTestData {
                                     "-")
                     )),
 
-                    new Company("Заочная физико-техническая школа при МФТИ", "-", Arrays.asList(
+                    new Company("Заочная физико-техническая школа при МФТИ", "https://mipt.ru/", Arrays.asList(
                             new Period(9, 1984, 6, 1987,
                                     "Закончил с отличием",
                                     "-")
