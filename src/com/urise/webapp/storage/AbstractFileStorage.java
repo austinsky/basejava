@@ -96,7 +96,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> doGetAll() {
         File[] files = directory.listFiles();
-        Objects.nonNull(files);
+        Objects.requireNonNull(files, "list files is empty");
         return Arrays.stream(files).map(file -> doGet(file)).collect(Collectors.toList());
     }
 }

@@ -43,17 +43,25 @@ public abstract class AbstractStorageTest {
 
     public static final Resume RESUME_1 = ResumeTestData.createResume(UUID_1, NAME_1, "+7123...", "skype1",
             "name1@email.com", "github1", "linkedin1", "stackoverflow1",
-            "website1", "objective1");
+            "website1", "objective1", ResumeTestData.examplePersonal,
+            ResumeTestData.exampleArchievement, ResumeTestData.exampleQualification,
+            ResumeTestData.exampleExperiance, ResumeTestData.exampleEducation);
     public static final Resume RESUME_2 = ResumeTestData.createResume(UUID_2, NAME_2, "+71232...", "skype2",
             "name2@email.com", "github2", "linkedin2", "stackoverflow2",
-            "website2", "objective2");
+            "website2", "objective2", ResumeTestData.examplePersonal,
+            ResumeTestData.exampleArchievement, ResumeTestData.exampleQualification,
+            ResumeTestData.exampleExperiance, ResumeTestData.exampleEducation);
     public static final Resume RESUME_3 = ResumeTestData.createResume(UUID_3, NAME_3, "+71233...", "skype3",
             "name3@email.com", "github3", "linkedin3", "stackoverflow3",
-            "website3", "objective3");;
+            "website3", "objective3", ResumeTestData.examplePersonal,
+            ResumeTestData.exampleArchievement, ResumeTestData.exampleQualification,
+            ResumeTestData.exampleExperiance, ResumeTestData.exampleEducation);;
 
     public static final Resume RESUME_TEST = ResumeTestData.createResume(UUID_TEST, NAME_TEST, "+71230...", "skype0",
             "name0@email.com", "github0", "linkedin0", "stackoverflow0",
-            "website0", "objective0");
+            "website0", "objective0", ResumeTestData.examplePersonal,
+            ResumeTestData.exampleArchievement, ResumeTestData.exampleQualification,
+            ResumeTestData.exampleExperiance, ResumeTestData.exampleEducation);
 
 
     public AbstractStorageTest(Storage storage) {
@@ -121,7 +129,9 @@ public abstract class AbstractStorageTest {
 
         Resume newResume = ResumeTestData.createResume(UUID_2, NAME_2, "+71230...", "skype",
                 "name@email.com", "github", "linkedin", "stackoverflow",
-                "website", "objective");
+                "website", "objective", ResumeTestData.examplePersonal,
+                ResumeTestData.exampleArchievement, ResumeTestData.exampleQualification,
+                ResumeTestData.exampleExperiance, ResumeTestData.exampleEducation);
         storage.update(newResume);
         assertSame(newResume, storage.get(UUID_2));
     }

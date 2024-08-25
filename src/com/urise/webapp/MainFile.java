@@ -38,7 +38,7 @@ public class MainFile {
     }
 
     public static void printRescursiveDirectory(File root, int deepLevel) {
-        Objects.nonNull(root);
+        Objects.requireNonNull(root);
         for (int i = 0; i < deepLevel; ++i) {
             System.out.print(" ");
         }
