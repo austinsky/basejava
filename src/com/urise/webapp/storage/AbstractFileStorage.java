@@ -5,15 +5,13 @@ import com.urise.webapp.model.Resume;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectStreamException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
-    private File directory;
+    private final File directory;
 
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
@@ -33,6 +31,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             for (File file : files) {
                 doDelete(file);
             }
+        } else {
+            throw new StorageException("I/O error", null);
         }
     }
 
@@ -96,7 +96,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> doGetAll() {
         File[] files = directory.listFiles();
-        Objects.requireNonNull(files, "list files is empty");
+        if (files == null) {
+            throw new StorageException("I/O error", null);
+        }
         return Arrays.stream(files).map(file -> doGet(file)).collect(Collectors.toList());
     }
 }
