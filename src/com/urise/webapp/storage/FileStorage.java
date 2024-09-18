@@ -2,18 +2,23 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.serializator.Serializator;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
-    private final File directory;
+/**
+ * gkislin
+ * 22.07.2016
+ */
+public class FileStorage extends AbstractStorage<File> {
+    private File directory;
+    private Serializator serializator;
 
-    protected AbstractFileStorage(File directory) {
+    protected FileStorage(File directory, Serializator serializator) {
+        this.serializator = serializator;
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -31,18 +36,16 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             for (File file : files) {
                 doDelete(file);
             }
-        } else {
-            throw new StorageException("I/O error", null);
         }
     }
 
     @Override
     public int size() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Read error", null);
+        String[] list = directory.list();
+        if (list == null) {
+            throw new StorageException("Directory read error", null);
         }
-        return files.length;
+        return list.length;
     }
 
     @Override
@@ -53,9 +56,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void doUpdate(Resume r, File file) {
         try {
-            doWrite(r, file);
+            serializator.doWrite(r, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
-            throw new RuntimeException("File write error: " + r.getUuid(), e);
+            throw new StorageException("File write error", r.getUuid(), e);
         }
     }
 
@@ -68,19 +71,16 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void doSave(Resume r, File file) {
         try {
             file.createNewFile();
-            doWrite(r, file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName(), e);
         }
+        doUpdate(r, file);
     }
-
-    protected abstract void doWrite(Resume r, File file) throws IOException;
-    protected abstract Resume doRead(File file) throws IOException;
 
     @Override
     protected Resume doGet(File file) {
         try {
-            return doRead(file);
+            return serializator.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File read error", file.getName(), e);
         }
@@ -89,7 +89,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void doDelete(File file) {
         if (!file.delete()) {
-            throw new StorageException("File Delete error", file.getName());
+            throw new StorageException("File delete error", file.getName());
         }
     }
 
@@ -97,8 +97,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> doGetAll() {
         File[] files = directory.listFiles();
         if (files == null) {
-            throw new StorageException("I/O error", null);
+            throw new StorageException("Directory read error", null);
         }
-        return Arrays.stream(files).map(file -> doGet(file)).collect(Collectors.toList());
+        List<Resume> list = new ArrayList<>(files.length);
+        for (File file : files) {
+            list.add(doGet(file));
+        }
+        return list;
     }
 }

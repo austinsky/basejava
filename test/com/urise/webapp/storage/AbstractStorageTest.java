@@ -10,6 +10,7 @@ package com.urise.webapp.storage;
         import org.junit.Before;
         import org.junit.Test;
 
+        import java.io.File;
         import java.lang.reflect.Array;
         import java.util.ArrayList;
         import java.util.Arrays;
@@ -20,6 +21,8 @@ package com.urise.webapp.storage;
         import static org.junit.Assert.*;
 
 public abstract class AbstractStorageTest {
+
+    protected static final File STORAGE_DIR = new File("/home/lex/java/0/basejava/storage");
 
     protected final Storage storage;
     public static final String UUID_1 = "uuid1";
@@ -133,7 +136,8 @@ public abstract class AbstractStorageTest {
                 ResumeTestData.exampleArchievement, ResumeTestData.exampleQualification,
                 ResumeTestData.exampleExperiance, ResumeTestData.exampleEducation);
         storage.update(newResume);
-        assertSame(newResume, storage.get(UUID_2));
+//        assertSame(newResume, storage.get(UUID_2));
+        assertTrue(newResume.equals(storage.get(UUID_2)));
     }
 
     @Test(expected = NotExistStorageException.class)

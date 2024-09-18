@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends AbstractSection<List<String>, String> {
-    List<String> strings;
+    private List<String> strings;
 
     public ListSection(String... strings) {
         this.strings = Arrays.stream(strings).toList();
