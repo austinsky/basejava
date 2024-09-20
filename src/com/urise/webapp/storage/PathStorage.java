@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
-    private Path directory;
-    private Serializator serializator;
+    private final Path directory;
+    private final Serializator serializator;
 
     protected PathStorage(String dir, Serializator serializator) {
         this.serializator = serializator;
@@ -37,18 +37,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public int size() {
-        Stream<Path> files;
-        try {
-            files = Files.list(directory);
-        } catch (IOException e) {
-            throw new StorageException("Directory read error", null, e);
-        }
-
-        if (files == null) {
-            throw new StorageException("Directory read error");
-        }
-
-        return (int)files.count();
+        return (int) getListFiles().count();
     }
 
     @Override
@@ -100,10 +89,20 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doGetAll() {
+        return getListFiles().map(this::doGet).collect(Collectors.toList());
+    }
+
+    private Stream<Path> getListFiles() {
+        Stream<Path> files;
         try {
-            return Files.list(directory).map(this::doGet).collect(Collectors.toList());
+            files = Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("doGetAll error", null, e);
+            throw new StorageException("Directory read error", null, e);
         }
+
+        if (files == null) {
+            throw new StorageException("Directory read error");
+        }
+        return files;
     }
 }

@@ -5,17 +5,18 @@ import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.serializator.Serializator;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * gkislin
  * 22.07.2016
  */
 public class FileStorage extends AbstractStorage<File> {
-    private File directory;
-    private Serializator serializator;
+    private final File directory;
+    private final Serializator serializator;
 
     protected FileStorage(File directory, Serializator serializator) {
         this.serializator = serializator;
@@ -31,21 +32,13 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                doDelete(file);
-            }
-        }
+        Arrays.stream(getListFiles()).forEach(this::doDelete);
     }
 
     @Override
     public int size() {
-        String[] list = directory.list();
-        if (list == null) {
-            throw new StorageException("Directory read error", null);
-        }
-        return list.length;
+        File[] files = getListFiles();
+        return files.length;
     }
 
     @Override
@@ -95,14 +88,14 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doGetAll() {
+        return Arrays.stream(getListFiles()).map(this::doGet).collect(Collectors.toList());
+    }
+
+    private File[] getListFiles() {
         File[] files = directory.listFiles();
         if (files == null) {
             throw new StorageException("Directory read error", null);
         }
-        List<Resume> list = new ArrayList<>(files.length);
-        for (File file : files) {
-            list.add(doGet(file));
-        }
-        return list;
+        return files;
     }
 }
