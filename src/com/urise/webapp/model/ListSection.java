@@ -1,12 +1,14 @@
 package com.urise.webapp.model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends AbstractSection<List<String>, String> {
+    private static final long serialVersionUID = 1L;
     private List<String> strings;
+
+    public ListSection() {}
 
     public ListSection(String... strings) {
         this.strings = Arrays.stream(strings).toList();

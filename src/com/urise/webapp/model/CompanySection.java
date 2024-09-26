@@ -1,19 +1,23 @@
 package com.urise.webapp.model;
 
-import java.util.ArrayList;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class CompanySection extends AbstractSection<List<Company>, Company> {
+    private static final long serialVersionUID = 1L;
 
-    private final List<Company> companies;
+    private List<Company> companies;
+
 
     public CompanySection(List<Company> companies) {
         this.companies = companies;
     }
 
     public CompanySection() {
-        this.companies = new ArrayList<>();
+
     }
 
     public void add(Company entity) {

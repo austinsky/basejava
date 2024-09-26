@@ -3,7 +3,10 @@ package com.urise.webapp.model;
 import java.util.Objects;
 
 public class TextSection extends AbstractSection<String, Object> {
+    private static final long serialVersionUID = 1L;
     private String text;
+
+    public TextSection() {}
 
     public TextSection(String text) {
         this.text = text;
