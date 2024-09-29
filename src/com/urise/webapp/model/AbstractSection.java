@@ -5,6 +5,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serializable;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class AbstractSection<T, E> implements Serializable {
+public abstract class AbstractSection implements Serializable {
     private static final long serialVersionUID = 1L;
 }

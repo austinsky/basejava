@@ -2,7 +2,7 @@ package com.urise.webapp.model;
 
 import java.util.Objects;
 
-public class TextSection extends AbstractSection<String, Object> {
+public class TextSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
     private String text;
 

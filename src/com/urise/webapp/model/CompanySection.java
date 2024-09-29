@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CompanySection extends AbstractSection<List<Company>, Company> {
+public class CompanySection extends AbstractSection {
     private static final long serialVersionUID = 1L;
 
     private List<Company> companies;

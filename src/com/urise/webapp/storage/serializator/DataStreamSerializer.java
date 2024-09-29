@@ -1,5 +1,6 @@
 package com.urise.webapp.storage.serializator;
 
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.*;
 
 import java.io.*;
@@ -25,13 +26,13 @@ public class DataStreamSerializer implements Serializator {
             Map<SectionType, AbstractSection> sections = r.getSections();
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
+                SectionType key = entry.getKey();
+                dos.writeUTF(key.name());
                 AbstractSection section = entry.getValue();
-                String className = section.getClass().getSimpleName();
-                dos.writeUTF(className);
 
-                switch (className) {
-                    case "CompanySection":
+                switch (key) {
+                    case EXPERIENCE:
+                    case EDUCATION:
                         List<Company> companies = ((CompanySection)section).get();
                         dos.writeInt(companies.size());
                         for (Company company : companies) {
@@ -40,27 +41,21 @@ public class DataStreamSerializer implements Serializator {
                             List<Period> periods = company.getPeriods();
                             dos.writeInt(periods.size());
                             for (Period period : periods) {
-                                dos.writeUTF(period.getTitle());
-                                dos.writeUTF(period.getDescription());
-                                LocalDate beginDate = period.getBeginDate();
-                                LocalDate endDate = period.getEndDate();
-                                dos.writeInt(beginDate.getYear());
-                                dos.writeInt(beginDate.getMonth().getValue());
-                                dos.writeInt(endDate.getYear());
-                                dos.writeInt(endDate.getMonth().getValue());
+                                writePeriod(dos, period);
                             }
                         }
                         break;
-                    case "ListSection":
+                    case OBJECTIVE:
+                        dos.writeUTF(((TextSection)section).get());
+                        break;
+                    default:
                         List<String> values = ((ListSection)section).get();
                         dos.writeInt(values.size());
                         for (String value : values) {
                             dos.writeUTF(value);
                         }
                         break;
-                    case "TextSection":
-                        dos.writeUTF(((TextSection)section).get());
-                        break;
+
                 }
 
             }
@@ -82,10 +77,10 @@ public class DataStreamSerializer implements Serializator {
             for (int k = 0; k < sizeSections; k++) {
                 String key = dis.readUTF();
                 AbstractSection section = null;
-                String className = dis.readUTF();
 
-                switch (className) {
-                    case "CompanySection":
+                switch (SectionType.valueOf(key)) {
+                    case EXPERIENCE:
+                    case EDUCATION:
                         List<Company> companies = new ArrayList<>();
                         int countCompanies =  dis.readInt();
                         for (int i = 0; i < countCompanies; i++) {
@@ -94,20 +89,18 @@ public class DataStreamSerializer implements Serializator {
                             List<Period> periods = new ArrayList<>();
                             int countPeriods = dis.readInt();
                             for (int j = 0; j < countPeriods; j++) {
-                                String title = dis.readUTF();
-                                String description = dis.readUTF();
-                                int beginYear = dis.readInt();
-                                int beginMonth = dis.readInt();
-                                int endYear = dis.readInt();
-                                int endMonth = dis.readInt();
-                                Period period = new Period(beginMonth, beginYear, endMonth, endYear, title, description);
+                                Period period = readPeriod(dis);
                                 periods.add(period);
                             }
                             companies.add(new Company(name, website, periods));
                         }
                         section = new CompanySection(companies);
                         break;
-                    case "ListSection":
+                    case OBJECTIVE:
+                        section = new TextSection(dis.readUTF());
+                        break;
+
+                    default:
                         List<String> values = new ArrayList<>();
                         int countRecords = dis.readInt();
                         for (int i = 0; i < countRecords; i++) {
@@ -115,14 +108,44 @@ public class DataStreamSerializer implements Serializator {
                         }
                         section = new ListSection(values.toArray(new String[0]));
                         break;
-                    case "TextSection":
-                        section = new TextSection(dis.readUTF());
-                        break;
+
                 }
 
                 resume.setSection(SectionType.valueOf(key), section);
             }
             return resume;
         }
+    }
+
+    private void writePeriod(DataOutputStream dos, Period period) {
+        try {
+            dos.writeUTF(period.getTitle());
+            dos.writeUTF(period.getDescription());
+            LocalDate beginDate = period.getBeginDate();
+            LocalDate endDate = period.getEndDate();
+            dos.writeInt(beginDate.getYear());
+            dos.writeInt(beginDate.getMonth().getValue());
+            dos.writeInt(endDate.getYear());
+            dos.writeInt(endDate.getMonth().getValue());
+        } catch (IOException e) {
+            throw new StorageException("DataStreamSerilizer: error write Period");
+        }
+    }
+
+    private Period readPeriod(DataInputStream dis) {
+        Period period = null;
+        try {
+            String title = dis.readUTF();
+            String description = dis.readUTF();
+            int beginYear = dis.readInt();
+            int beginMonth = dis.readInt();
+            int endYear = dis.readInt();
+            int endMonth = dis.readInt();
+            period = new Period(beginMonth, beginYear, endMonth, endYear, title, description);
+        } catch (IOException e) {
+            throw new StorageException("DataStreamSerilizer: error read Period");
+        }
+
+        return period;
     }
 }

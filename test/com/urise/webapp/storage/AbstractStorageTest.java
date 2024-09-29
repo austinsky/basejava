@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractStorageTest {
 
-    protected static final File STORAGE_DIR = new File("/home/lex/java/0/basejava/storage");
+    protected static final File STORAGE_DIR = new File("/home/lex/java/basejava/code/my/basejava/storage");
 
     protected final Storage storage;
     public static final String UUID_1 = "uuid1";
