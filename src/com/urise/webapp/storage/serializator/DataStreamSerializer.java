@@ -1,6 +1,5 @@
 package com.urise.webapp.storage.serializator;
 
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.*;
 
 import java.io.*;
@@ -117,35 +116,34 @@ public class DataStreamSerializer implements Serializator {
         }
     }
 
-    private void writePeriod(DataOutputStream dos, Period period) {
-        try {
+    private void writePeriod(DataOutputStream dos, Period period) throws IOException {
             dos.writeUTF(period.getTitle());
             dos.writeUTF(period.getDescription());
             LocalDate beginDate = period.getBeginDate();
             LocalDate endDate = period.getEndDate();
-            dos.writeInt(beginDate.getYear());
-            dos.writeInt(beginDate.getMonth().getValue());
-            dos.writeInt(endDate.getYear());
-            dos.writeInt(endDate.getMonth().getValue());
-        } catch (IOException e) {
-            throw new StorageException("DataStreamSerilizer: error write Period");
-        }
+            writeDate(dos, beginDate);
+            writeDate(dos, endDate);
     }
 
-    private Period readPeriod(DataInputStream dis) {
-        Period period = null;
-        try {
-            String title = dis.readUTF();
-            String description = dis.readUTF();
-            int beginYear = dis.readInt();
-            int beginMonth = dis.readInt();
-            int endYear = dis.readInt();
-            int endMonth = dis.readInt();
-            period = new Period(beginMonth, beginYear, endMonth, endYear, title, description);
-        } catch (IOException e) {
-            throw new StorageException("DataStreamSerilizer: error read Period");
-        }
+    private void writeDate(DataOutputStream dos, LocalDate date) throws IOException {
+        dos.writeInt(date.getYear());
+        dos.writeInt(date.getMonth().getValue());
+    }
 
+    private Period readPeriod(DataInputStream dis) throws IOException {
+        Period period = null;
+        String title = dis.readUTF();
+        String description = dis.readUTF();
+        LocalDate beginDate = readDate(dis);
+        LocalDate endDate = readDate(dis);
+        period = new Period(title, description, beginDate, endDate);
         return period;
+    }
+
+    private LocalDate readDate(DataInputStream dis) throws IOException {
+        int year= dis.readInt();
+        int month = dis.readInt();
+        LocalDate date = LocalDate.of(year, month, 1);
+        return date;
     }
 }
