@@ -30,6 +30,20 @@ public class DataStreamSerializer implements Serializator {
                 AbstractSection section = entry.getValue();
 
                 switch (key) {
+                    case OBJECTIVE:
+                        dos.writeUTF(((TextSection)section).get());
+                        break;
+
+                    case PERSONAL:
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        List<String> values = ((ListSection)section).get();
+                        dos.writeInt(values.size());
+                        for (String value : values) {
+                            dos.writeUTF(value);
+                        }
+                        break;
+
                     case EXPERIENCE:
                     case EDUCATION:
                         List<Company> companies = ((CompanySection)section).get();
@@ -42,16 +56,6 @@ public class DataStreamSerializer implements Serializator {
                             for (Period period : periods) {
                                 writePeriod(dos, period);
                             }
-                        }
-                        break;
-                    case OBJECTIVE:
-                        dos.writeUTF(((TextSection)section).get());
-                        break;
-                    default:
-                        List<String> values = ((ListSection)section).get();
-                        dos.writeInt(values.size());
-                        for (String value : values) {
-                            dos.writeUTF(value);
                         }
                         break;
 
@@ -78,6 +82,21 @@ public class DataStreamSerializer implements Serializator {
                 AbstractSection section = null;
 
                 switch (SectionType.valueOf(key)) {
+                    case OBJECTIVE:
+                        section = new TextSection(dis.readUTF());
+                        break;
+
+                    case PERSONAL:
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        List<String> values = new ArrayList<>();
+                        int countRecords = dis.readInt();
+                        for (int i = 0; i < countRecords; i++) {
+                            values.add(dis.readUTF());
+                        }
+                        section = new ListSection(values.toArray(new String[0]));
+                        break;
+
                     case EXPERIENCE:
                     case EDUCATION:
                         List<Company> companies = new ArrayList<>();
@@ -94,18 +113,6 @@ public class DataStreamSerializer implements Serializator {
                             companies.add(new Company(name, website, periods));
                         }
                         section = new CompanySection(companies);
-                        break;
-                    case OBJECTIVE:
-                        section = new TextSection(dis.readUTF());
-                        break;
-
-                    default:
-                        List<String> values = new ArrayList<>();
-                        int countRecords = dis.readInt();
-                        for (int i = 0; i < countRecords; i++) {
-                            values.add(dis.readUTF());
-                        }
-                        section = new ListSection(values.toArray(new String[0]));
                         break;
 
                 }
