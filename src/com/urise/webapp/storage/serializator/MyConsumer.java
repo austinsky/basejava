@@ -1,4 +1,4 @@
-package com.urise.webapp.model;
+package com.urise.webapp.storage.serializator;
 
 import java.io.IOException;
 
