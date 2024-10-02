@@ -5,6 +5,7 @@ import com.urise.webapp.model.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -17,14 +18,22 @@ public class DataStreamSerializer implements Serializator {
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
             dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+//            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+//                dos.writeUTF(entry.getKey().name());
+//                dos.writeUTF(entry.getValue());
+//            }
+            writeWithException(contacts.entrySet(), x -> {
+                Map.Entry<ContactType, String> entry = (Map.Entry<ContactType, String>) x;
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
+            });
+
             // implements sections
             Map<SectionType, AbstractSection> sections = r.getSections();
             dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
+//            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
+            writeWithException(sections.entrySet(), x -> {
+                Map.Entry<SectionType, AbstractSection> entry = (Map.Entry<SectionType, AbstractSection>) x;
                 SectionType key = entry.getKey();
                 dos.writeUTF(key.name());
                 AbstractSection section = entry.getValue();
@@ -59,7 +68,7 @@ public class DataStreamSerializer implements Serializator {
                         }
                         break;
                 }
-            }
+            });
         }
     }
 
@@ -137,12 +146,18 @@ public class DataStreamSerializer implements Serializator {
         LocalDate beginDate = readDate(dis);
         LocalDate endDate = readDate(dis);
         return new Period(title, description, beginDate, endDate);
-//        return new Period(dis.readUTF(), dis.readUTF(), readDate(dis), readDate(dis));
     }
 
     private LocalDate readDate(DataInputStream dis) throws IOException {
         int year = dis.readInt();
         int month = dis.readInt();
         return LocalDate.of(year, month, 1);
+    }
+
+    private <T> void writeWithException (Collection<T> collection, MyConsumer consumer) throws IOException {
+//        collection.stream().forEach(consumer);
+        for (T t : collection) {
+            consumer.execute(t);
+        }
     }
 }
