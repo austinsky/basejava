@@ -21,7 +21,7 @@ public class DataStreamSerializer implements Serializator {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             }
-            // TODO implements sections
+            // implements sections
             Map<SectionType, AbstractSection> sections = r.getSections();
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
@@ -58,9 +58,7 @@ public class DataStreamSerializer implements Serializator {
                             }
                         }
                         break;
-
                 }
-
             }
         }
     }
@@ -75,7 +73,7 @@ public class DataStreamSerializer implements Serializator {
             for (int i = 0; i < size; i++) {
                 resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-            // TODO implements sections
+            // implements sections
             int sizeSections = dis.readInt();
             for (int k = 0; k < sizeSections; k++) {
                 String key = dis.readUTF();
@@ -85,7 +83,6 @@ public class DataStreamSerializer implements Serializator {
                     case OBJECTIVE:
                         section = new TextSection(dis.readUTF());
                         break;
-
                     case PERSONAL:
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
@@ -94,9 +91,8 @@ public class DataStreamSerializer implements Serializator {
                         for (int i = 0; i < countRecords; i++) {
                             values.add(dis.readUTF());
                         }
-                        section = new ListSection(values.toArray(new String[0]));
+                        section = new ListSection(values);
                         break;
-
                     case EXPERIENCE:
                     case EDUCATION:
                         List<Company> companies = new ArrayList<>();
@@ -114,7 +110,6 @@ public class DataStreamSerializer implements Serializator {
                         }
                         section = new CompanySection(companies);
                         break;
-
                 }
 
                 resume.setSection(SectionType.valueOf(key), section);
@@ -126,10 +121,8 @@ public class DataStreamSerializer implements Serializator {
     private void writePeriod(DataOutputStream dos, Period period) throws IOException {
             dos.writeUTF(period.getTitle());
             dos.writeUTF(period.getDescription());
-            LocalDate beginDate = period.getBeginDate();
-            LocalDate endDate = period.getEndDate();
-            writeDate(dos, beginDate);
-            writeDate(dos, endDate);
+            writeDate(dos, period.getBeginDate());
+            writeDate(dos, period.getEndDate());
     }
 
     private void writeDate(DataOutputStream dos, LocalDate date) throws IOException {
@@ -137,20 +130,19 @@ public class DataStreamSerializer implements Serializator {
         dos.writeInt(date.getMonth().getValue());
     }
 
+
     private Period readPeriod(DataInputStream dis) throws IOException {
-        Period period = null;
         String title = dis.readUTF();
         String description = dis.readUTF();
         LocalDate beginDate = readDate(dis);
         LocalDate endDate = readDate(dis);
-        period = new Period(title, description, beginDate, endDate);
-        return period;
+        return new Period(title, description, beginDate, endDate);
+//        return new Period(dis.readUTF(), dis.readUTF(), readDate(dis), readDate(dis));
     }
 
     private LocalDate readDate(DataInputStream dis) throws IOException {
-        int year= dis.readInt();
+        int year = dis.readInt();
         int month = dis.readInt();
-        LocalDate date = LocalDate.of(year, month, 1);
-        return date;
+        return LocalDate.of(year, month, 1);
     }
 }

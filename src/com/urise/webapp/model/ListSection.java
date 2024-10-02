@@ -14,6 +14,10 @@ public class ListSection extends AbstractSection {
         this.strings = Arrays.stream(strings).toList();
     }
 
+    public ListSection(List<String> strings) {
+        this.strings = strings;
+    }
+
     public List<String> get() {
         return strings;
     }
