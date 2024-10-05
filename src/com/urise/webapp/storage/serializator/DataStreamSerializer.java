@@ -17,12 +17,8 @@ public class DataStreamSerializer implements Serializator {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
-            dos.writeInt(contacts.size());
-//            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-//                dos.writeUTF(entry.getKey().name());
-//                dos.writeUTF(entry.getValue());
-//            }
-            writeWithException(contacts.entrySet(), x -> {
+
+            writeWithException(contacts.entrySet(), dos, x -> {
                 Map.Entry<ContactType, String> entry = (Map.Entry<ContactType, String>) x;
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
@@ -30,9 +26,8 @@ public class DataStreamSerializer implements Serializator {
 
             // implements sections
             Map<SectionType, AbstractSection> sections = r.getSections();
-            dos.writeInt(sections.size());
-//            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
-            writeWithException(sections.entrySet(), x -> {
+
+            writeWithException(sections.entrySet(), dos, x -> {
                 Map.Entry<SectionType, AbstractSection> entry = (Map.Entry<SectionType, AbstractSection>) x;
                 SectionType key = entry.getKey();
                 dos.writeUTF(key.name());
@@ -154,8 +149,10 @@ public class DataStreamSerializer implements Serializator {
         return LocalDate.of(year, month, 1);
     }
 
-    private <T> void writeWithException (Collection<T> collection, MyConsumer consumer) throws IOException {
-//        collection.stream().forEach(consumer);
+    private <T> void writeWithException (Collection<T> collection,
+                                         DataOutputStream dos,
+                                         MyConsumer<T> consumer) throws IOException {
+        dos.writeInt(collection.size());
         for (T t : collection) {
             consumer.execute(t);
         }
