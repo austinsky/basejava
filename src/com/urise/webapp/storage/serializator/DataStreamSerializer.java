@@ -19,17 +19,17 @@ public class DataStreamSerializer implements Serializator {
             Map<ContactType, String> contacts = r.getContacts();
 
             writeWithException(contacts.entrySet(), dos, entry -> {
-                dos.writeUTF(((Map.Entry<ContactType, String>) entry).getKey().name());
-                dos.writeUTF(((Map.Entry<ContactType, String>) entry).getValue());
+                dos.writeUTF(entry.getKey().name());
+                dos.writeUTF(entry.getValue());
             });
 
             // implements sections
             Map<SectionType, AbstractSection> sections = r.getSections();
 
             writeWithException(sections.entrySet(), dos, entry -> {
-                SectionType key = ((Map.Entry<SectionType, AbstractSection>) entry).getKey();
+                SectionType key = entry.getKey();
                 dos.writeUTF(key.name());
-                AbstractSection section = ((Map.Entry<SectionType, AbstractSection>) entry).getValue();
+                AbstractSection section = entry.getValue();
 
                 switch (key) {
                     case OBJECTIVE:
@@ -71,9 +71,7 @@ public class DataStreamSerializer implements Serializator {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            readWithException(dis, x -> {
-                resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            });
+            readWithException(dis, x -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             // implements sections
             readWithException(dis, x -> {
                 String key = dis.readUTF();
