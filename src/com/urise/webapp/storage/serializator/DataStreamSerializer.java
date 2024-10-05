@@ -18,20 +18,18 @@ public class DataStreamSerializer implements Serializator {
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
 
-            writeWithException(contacts.entrySet(), dos, x -> {
-                Map.Entry<ContactType, String> entry = (Map.Entry<ContactType, String>) x;
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue());
+            writeWithException(contacts.entrySet(), dos, entry -> {
+                dos.writeUTF(((Map.Entry<ContactType, String>) entry).getKey().name());
+                dos.writeUTF(((Map.Entry<ContactType, String>) entry).getValue());
             });
 
             // implements sections
             Map<SectionType, AbstractSection> sections = r.getSections();
 
-            writeWithException(sections.entrySet(), dos, x -> {
-                Map.Entry<SectionType, AbstractSection> entry = (Map.Entry<SectionType, AbstractSection>) x;
-                SectionType key = entry.getKey();
+            writeWithException(sections.entrySet(), dos, entry -> {
+                SectionType key = ((Map.Entry<SectionType, AbstractSection>) entry).getKey();
                 dos.writeUTF(key.name());
-                AbstractSection section = entry.getValue();
+                AbstractSection section = ((Map.Entry<SectionType, AbstractSection>) entry).getValue();
 
                 switch (key) {
                     case OBJECTIVE:
@@ -73,13 +71,11 @@ public class DataStreamSerializer implements Serializator {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
+            readWithException(dis, x -> {
                 resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
+            });
             // implements sections
-            int sizeSections = dis.readInt();
-            for (int k = 0; k < sizeSections; k++) {
+            readWithException(dis, x -> {
                 String key = dis.readUTF();
                 AbstractSection section = null;
 
@@ -117,7 +113,7 @@ public class DataStreamSerializer implements Serializator {
                 }
 
                 resume.setSection(SectionType.valueOf(key), section);
-            }
+            });
             return resume;
         }
     }
@@ -155,6 +151,14 @@ public class DataStreamSerializer implements Serializator {
         dos.writeInt(collection.size());
         for (T t : collection) {
             consumer.execute(t);
+        }
+    }
+
+    private <T> void readWithException (DataInputStream dis,
+                                        MyConsumer<T> consumer) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; ++i) {
+            consumer.execute(null);
         }
     }
 }
