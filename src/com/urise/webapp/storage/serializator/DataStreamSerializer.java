@@ -71,9 +71,9 @@ public class DataStreamSerializer implements Serializator {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            readWithException(dis, x -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readWithException(dis, ignore -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             // implements sections
-            readWithException(dis, x -> {
+            readWithException(dis, ignore -> {
                 String key = dis.readUTF();
                 AbstractSection section = null;
 
