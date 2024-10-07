@@ -67,9 +67,7 @@ public class DataStreamSerializer implements Serializator {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            readWithException(dis, () -> {
-                resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            });
+            readWithException(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             // implements sections
             readWithException(dis, () -> {
                 String key = dis.readUTF();
@@ -83,9 +81,7 @@ public class DataStreamSerializer implements Serializator {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         List<String> values = new ArrayList<>();
-                        readWithException(dis, () -> {
-                            values.add(dis.readUTF());
-                        });
+                        readWithException(dis, () -> values.add(dis.readUTF()));
                         section = new ListSection(values);
                         break;
                     case EXPERIENCE:
