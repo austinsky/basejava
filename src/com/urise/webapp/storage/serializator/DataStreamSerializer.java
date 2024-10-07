@@ -33,24 +33,20 @@ public class DataStreamSerializer implements Serializator {
 
                 switch (key) {
                     case OBJECTIVE:
-                        dos.writeUTF(((TextSection)section).get());
+                        dos.writeUTF(((TextSection) section).get());
                         break;
 
                     case PERSONAL:
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        List<String> values = ((ListSection)section).get();
-                        dos.writeInt(values.size());
-                        for (String value : values) {
-                            dos.writeUTF(value);
-                        }
+                        List<String> values = ((ListSection) section).get();
+                        writeWithException(values, dos, dos::writeUTF);
                         break;
 
                     case EXPERIENCE:
                     case EDUCATION:
-                        List<Company> companies = ((CompanySection)section).get();
-                        dos.writeInt(companies.size());
-                        for (Company company : companies) {
+                        List<Company> companies = ((CompanySection) section).get();
+                        writeWithException(companies, dos, company -> {
                             dos.writeUTF(company.getName());
                             dos.writeUTF(company.getWebsite());
                             List<Period> periods = company.getPeriods();
@@ -58,7 +54,7 @@ public class DataStreamSerializer implements Serializator {
                             for (Period period : periods) {
                                 writePeriod(dos, period);
                             }
-                        }
+                        });
                         break;
                 }
             });
@@ -71,9 +67,11 @@ public class DataStreamSerializer implements Serializator {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            readWithException(dis, ignore -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readWithException(dis, () -> {
+                resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
+            });
             // implements sections
-            readWithException(dis, ignore -> {
+            readWithException(dis, () -> {
                 String key = dis.readUTF();
                 AbstractSection section = null;
 
@@ -85,27 +83,24 @@ public class DataStreamSerializer implements Serializator {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         List<String> values = new ArrayList<>();
-                        int countRecords = dis.readInt();
-                        for (int i = 0; i < countRecords; i++) {
+                        readWithException(dis, () -> {
                             values.add(dis.readUTF());
-                        }
+                        });
                         section = new ListSection(values);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
                         List<Company> companies = new ArrayList<>();
-                        int countCompanies =  dis.readInt();
-                        for (int i = 0; i < countCompanies; i++) {
+                        readWithException(dis, () -> {
                             String name = dis.readUTF();
                             String website = dis.readUTF();
                             List<Period> periods = new ArrayList<>();
-                            int countPeriods = dis.readInt();
-                            for (int j = 0; j < countPeriods; j++) {
+                            readWithException(dis, () -> {
                                 Period period = readPeriod(dis);
                                 periods.add(period);
-                            }
+                            });
                             companies.add(new Company(name, website, periods));
-                        }
+                        });
                         section = new CompanySection(companies);
                         break;
                 }
@@ -117,10 +112,10 @@ public class DataStreamSerializer implements Serializator {
     }
 
     private void writePeriod(DataOutputStream dos, Period period) throws IOException {
-            dos.writeUTF(period.getTitle());
-            dos.writeUTF(period.getDescription());
-            writeDate(dos, period.getBeginDate());
-            writeDate(dos, period.getEndDate());
+        dos.writeUTF(period.getTitle());
+        dos.writeUTF(period.getDescription());
+        writeDate(dos, period.getBeginDate());
+        writeDate(dos, period.getEndDate());
     }
 
     private void writeDate(DataOutputStream dos, LocalDate date) throws IOException {
@@ -143,20 +138,20 @@ public class DataStreamSerializer implements Serializator {
         return LocalDate.of(year, month, 1);
     }
 
-    private <T> void writeWithException (Collection<T> collection,
-                                         DataOutputStream dos,
-                                         MyConsumer<T> consumer) throws IOException {
+    private <T> void writeWithException(Collection<T> collection,
+                                        DataOutputStream dos,
+                                        MyWriter<T> consumer) throws IOException {
         dos.writeInt(collection.size());
         for (T t : collection) {
             consumer.execute(t);
         }
     }
 
-    private <T> void readWithException (DataInputStream dis,
-                                        MyConsumer<T> consumer) throws IOException {
+    private void readWithException(DataInputStream dis,
+                                   MyReader consumer) throws IOException {
         int size = dis.readInt();
         for (int i = 0; i < size; ++i) {
-            consumer.execute(null);
+            consumer.execute();
         }
     }
 }
