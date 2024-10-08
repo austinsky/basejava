@@ -50,10 +50,7 @@ public class DataStreamSerializer implements Serializator {
                             dos.writeUTF(company.getName());
                             dos.writeUTF(company.getWebsite());
                             List<Period> periods = company.getPeriods();
-                            dos.writeInt(periods.size());
-                            for (Period period : periods) {
-                                writePeriod(dos, period);
-                            }
+                            writeWithException(periods, dos, period -> writePeriod(dos, period));
                         });
                         break;
                 }

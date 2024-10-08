@@ -15,12 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractStorageTest {
-
     protected static final File STORAGE_DIR = new File("/home/lex/java/basejava/code/my/basejava/storage");
-
     protected final Storage storage;
     public static final String UUID_1 = "uuid1";
     public static final String UUID_2 = "uuid2";
@@ -34,12 +31,6 @@ public abstract class AbstractStorageTest {
     public static final String NAME_TEST = "lex0";
 
     public static final String UUID_NOT_EXISTS = "dummy";
-
-//    public static final Resume RESUME_1 = new Resume(UUID_1, NAME_1);
-//    public static final Resume RESUME_2 = new Resume(UUID_2, NAME_2);
-//    public static final Resume RESUME_3 = new Resume(UUID_3, NAME_3);
-//
-//    public static final Resume RESUME_TEST = new Resume(UUID_TEST, NAME_TEST);
 
     public static final Resume RESUME_1 = ResumeTestData.createResume(UUID_1, NAME_1, "+7123...", "skype1",
             "name1@email.com", "github1", "linkedin1", "stackoverflow1",
@@ -55,7 +46,7 @@ public abstract class AbstractStorageTest {
             "name3@email.com", "github3", "linkedin3", "stackoverflow3",
             "website3", "objective3", ResumeTestData.examplePersonal,
             ResumeTestData.exampleArchievement, ResumeTestData.exampleQualification,
-            ResumeTestData.exampleExperiance, ResumeTestData.exampleEducation);;
+            ResumeTestData.exampleExperiance, ResumeTestData.exampleEducation);
 
     public static final Resume RESUME_TEST = ResumeTestData.createResume(UUID_TEST, NAME_TEST, "+71230...", "skype0",
             "name0@email.com", "github0", "linkedin0", "stackoverflow0",
@@ -69,7 +60,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         storage.clear();
         storage.save(RESUME_1);
         storage.save(RESUME_2);
@@ -133,8 +124,7 @@ public abstract class AbstractStorageTest {
                 ResumeTestData.exampleArchievement, ResumeTestData.exampleQualification,
                 ResumeTestData.exampleExperiance, ResumeTestData.exampleEducation);
         storage.update(newResume);
-//        assertSame(newResume, storage.get(UUID_2));
-        assertTrue(newResume.equals(storage.get(UUID_2)));
+        assertEquals(newResume, storage.get(UUID_2));
     }
 
     @Test(expected = NotExistStorageException.class)
