@@ -6,16 +6,17 @@ public class MainDeadLock {
         Object lock1 = new Object();
         Object lock2 = new Object();
 
-        new Thread(() -> {
-            work(lock1, lock2, "1 поток");
-        }).start();
+        startThread(lock1, lock2, "1 поток");
+        startThread(lock2, lock1, "2 поток");
+    }
 
+    private static void startThread(Object lock1, Object lock2, String threadName) {
         new Thread(() -> {
-            work(lock2, lock1, "2 поток");
+            work(lock1, lock2, threadName);
         }).start();
     }
 
-    public static void work(Object obj1, Object obj2, String name) {
+    private static void work(Object obj1, Object obj2, String name) {
         synchronized (obj1) {
             try {
                 Thread.sleep(500);
