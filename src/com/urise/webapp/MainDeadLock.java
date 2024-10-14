@@ -11,9 +11,7 @@ public class MainDeadLock {
     }
 
     private static void startThread(Object lock1, Object lock2, String threadName) {
-        new Thread(() -> {
-            work(lock1, lock2, threadName);
-        }).start();
+        new Thread(() -> work(lock1, lock2, threadName)).start();
     }
 
     private static void work(Object obj1, Object obj2, String name) {
